@@ -1,12 +1,18 @@
-package com.example.demo.model;
+package com.example.proyectokafka_02.modelo;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Date;
 
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 
 @Entity
@@ -19,13 +25,17 @@ public class Cliente {
     private String apellidom;
     private int edad;
     private String sexo;
-    private LocalDateTime fechaInsercion;
-    private LocalDateTime fechaModificacion;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @Column(name = "fecha_insercion")
+    private Date fechaInsercion;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @Column(name = "fecha_modificacion")
+    private Date fechaModificacion;
 
     public Cliente() {
     }
 
-    public Cliente(String id, String nombre, String apellidop, String apellidom, int edad, String sexo, LocalDateTime fechaInsercion, LocalDateTime fechaModificacion) {
+    public Cliente(String id, String nombre, String apellidop, String apellidom, int edad, String sexo, Date fechaInsercion, Date fechaModificacion) {
         this.id = id;
         this.nombre = nombre;
         this.apellidop = apellidop;
@@ -84,19 +94,19 @@ public class Cliente {
         this.sexo = sexo;
     }
 
-    public LocalDateTime getFechaInsercion() {
+    public Date getFechaInsercion() {
         return this.fechaInsercion;
     }
 
-    public void setFechaInsercion(LocalDateTime fechaInsercion) {
+    public void setFechaInsercion(Date fechaInsercion) {
         this.fechaInsercion = fechaInsercion;
     }
 
-    public LocalDateTime getFechaModificacion() {
+    public Date getFechaModificacion() {
         return this.fechaModificacion;
     }
 
-    public void setFechaModificacion(LocalDateTime fechaModificacion) {
+    public void setFechaModificacion(Date fechaModificacion) {
         this.fechaModificacion = fechaModificacion;
     }
 
@@ -130,12 +140,12 @@ public class Cliente {
         return this;
     }
 
-    public Cliente fechaInsercion(LocalDateTime fechaInsercion) {
+    public Cliente fechaInsercion(Date fechaInsercion) {
         setFechaInsercion(fechaInsercion);
         return this;
     }
 
-    public Cliente fechaModificacion(LocalDateTime fechaModificacion) {
+    public Cliente fechaModificacion(Date fechaModificacion) {
         setFechaModificacion(fechaModificacion);
         return this;
     }
@@ -170,14 +180,14 @@ public class Cliente {
             "}";
     }
 
+
+    // Método para convertir el objeto a JSON
     public String toJson() {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            // Convertir el objeto Cliente a un String JSON
-            return objectMapper.writeValueAsString(this);
-        } catch (Exception e) {
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
-            // En caso de error, retorna un JSON vacío o maneja el error como prefieras
             return "{}";
         }
     }
